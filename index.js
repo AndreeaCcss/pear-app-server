@@ -45,12 +45,12 @@ let clients = 0;
 io.on("connection", function(socket) {
   console.log("got connection");
   socket.on("NewClient", function() {
-    if (clients < 2) {
-      if (clients == 1) {
-        this.emit("CreatePeer");
-      }
-    } else this.emit("SessionActive");
-    clients++;
+    // if (clients < 2) {
+    //  if (clients == 1) {
+    this.emit("CreatePeer");
+    //   }
+    // } else this.emit("SessionActive");
+    // clients++;
   });
 
   socket.on("Offer", SendOffer);
@@ -59,6 +59,7 @@ io.on("connection", function(socket) {
 
   socket.on("joinedRoom", function(params) {
     socket.join(params.id);
+
     // socket.in(params.id).emit("CreatePeer");
     // socket.leave(socket.id);
     //socket.emit(socket.id);
