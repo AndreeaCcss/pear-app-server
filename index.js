@@ -5,15 +5,18 @@ const { join } = require("path");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 
+const userRouter = require("./users/router");
+
 const app = express();
 
-const port = process.env.SERVER_PORT || 4000;
+const port = process.env.PORT || 4000;
 
 const corsMiddleware = cors();
 const JSONparser = bodyParser.json();
 
 app.use(corsMiddleware);
 app.use(JSONparser);
+app.use(userRouter);
 
 const jwtCheck = jwt({
   secret: jwks.expressJwtSecret({
@@ -49,9 +52,15 @@ io.on("connection", function(socket) {
     } else this.emit("SessionActive");
     clients++;
   });
+
   socket.on("Offer", SendOffer);
   socket.on("Answer", SendAnswer);
   socket.on("disconnect", Disconnect);
+
+  socket.on("joinedRoom", function(params) {
+    socket.join(params.id);
+    console.log("socket", params.id);
+  });
 });
 
 function Disconnect() {
@@ -70,3 +79,10 @@ function SendOffer(offer) {
 function SendAnswer(data) {
   this.broadcast.emit("BackAnswer", data);
 }
+
+// const nsp = io.of("/my-namespace");
+// nsp.on("connection", function(socket) {
+//   console.log("someone connected");
+// });
+
+// nsp.emit("hi", "everyone!");
