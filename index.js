@@ -43,11 +43,27 @@ io.origins("*:*");
 let clients = 0;
 
 io.on("connection", function(socket) {
-  console.log("got connection");
-  socket.on("NewClient", function() {
+  console.log("got connection", socket.id);
+
+  socket.on("NewClient", function(data) {
     // if (clients < 2) {
     //  if (clients == 1) {
-    this.emit("CreatePeer");
+    // this.emit("CreatePeer");
+
+    console.log("rooms before leaving", socket.rooms);
+    console.log("socketId before leaving", socket.id);
+    socket.leave(socket.id, () => {
+      console.log("rooms after leaving", socket.rooms);
+      console.log("roomId before joining", data.roomId);
+      socket.join(data.roomId, () => {
+        console.log("rooms after joining", socket.rooms);
+        socket.in(data.roomId).emit("CreatePeer");
+      });
+    });
+
+    socket.on("disconnect", () => Disconnect(socket, data.roomId));
+
+    // socket.emit("CreatePeer");
     //   }
     // } else this.emit("SessionActive");
     // clients++;
@@ -55,34 +71,41 @@ io.on("connection", function(socket) {
 
   socket.on("Offer", SendOffer);
   socket.on("Answer", SendAnswer);
-  socket.on("disconnect", Disconnect);
+  // socket.on("disconnect", () => Disconnect(socket, data.roomId));
 
-  socket.on("joinedRoom", function(params) {
-    socket.join(params.id);
+  // socket.on("changeToRoom", function(params) {
+  //   socket.leave(socket.id);
+  //   socket.join(params.roomId);
 
-    // socket.in(params.id).emit("CreatePeer");
-    // socket.leave(socket.id);
-    //socket.emit(socket.id);
-    // socket.in(socket.id).emit("Disconnect");
-    console.log("socket", params.id);
-  });
+  //   // socket.in(params.id).emit("CreatePeer");
+  //   // socket.leave(socket.id);
+  //   //socket.emit(socket.id);
+  //   // socket.in(socket.id).emit("Disconnect");
+  //   console.log("socket", params.id);
+  // });
 });
 
-function Disconnect() {
-  if (clients > 0) {
-    if (clients <= 2) {
-      this.broadcast.emit("Disconnect");
-    }
-    clients--;
-  }
+function Disconnect(socket, roomId) {
+  // if (clients > 0) {
+  //   if (clients <= 2) {
+  // console.log("data Disconnect", data);
+  // console.log("this Disconnect rooms", this.rooms);
+  socket.in(roomId).emit("Disconnect");
+  //   }
+  //   clients--;
+  // }
 }
 
 function SendOffer(offer) {
-  this.broadcast.emit("BackOffer", offer);
+  console.log("sendOffer rooms", this.rooms);
+  const rooms = Object.keys(this.rooms);
+  this.in(rooms[rooms.length - 1]).emit("BackOffer", offer);
 }
 
 function SendAnswer(data) {
-  this.broadcast.emit("BackAnswer", data);
+  console.log("sendAnswer rooms", this.rooms);
+  const rooms = Object.keys(this.rooms);
+  this.in(rooms[rooms.length - 1]).emit("BackAnswer", data);
 }
 
 // const nsp = io.of("/my-namespace");
