@@ -59,7 +59,7 @@ io.on("connection", function(socket) {
 
   socket.on("joinedRoom", function(params) {
     socket.join(params.id);
-    socket.in(params.id).emit("CreatePeer");
+    // socket.in(params.id).emit("CreatePeer");
     socket.leave(socket.id);
     //socket.emit(socket.id);
     // socket.in(socket.id).emit("Disconnect");
