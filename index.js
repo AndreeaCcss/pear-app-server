@@ -59,6 +59,7 @@ io.on("connection", function(socket) {
 
   socket.on("joinedRoom", function(params) {
     socket.join(params.id);
+    socket.leave(socket.id);
     console.log("socket", params.id);
   });
 });
