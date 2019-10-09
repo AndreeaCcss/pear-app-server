@@ -22,4 +22,18 @@ router.get("/users", (req, res, next) => {
     .catch(next);
 });
 
+router.delete("/users/:userId", async (req, res, next) => {
+  const { userId } = req.params;
+
+  User.destroy({
+    where: {
+      id: userId
+    }
+  })
+    .then(number => {
+      res.send({ number });
+    })
+    .catch(err => next(err));
+});
+
 module.exports = router;
