@@ -19,4 +19,6 @@ https://github.com/AndreeaCcss/pear-app-client
 
 https://pear-app-459.herokuapp.com
 
-#### This repository was build for the @Codaisseur Academy hackathon.
+#### Special thanks to @Vinnu1 for the youtube tutorial:
+
+https://www.youtube.com/watch?v=KLCcCTFivhM&t=560s
