@@ -72,7 +72,7 @@ function SendOffer(offer) {
 }
 
 function SendAnswer(data) {
-  console.log("sendAnswer rooms", this.rooms);
+  console.log("sendAnswer rooms", this.rooms[0], this.rooms[1]);
   const rooms = Object.keys(this.rooms);
   this.in(rooms[rooms.length - 1]).emit("BackAnswer", data);
 }
