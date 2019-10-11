@@ -4,7 +4,7 @@
 
 ## About
 
-**A server that enables video calling express, socket.io and secure authentication with Auth0.**
+**A server that enables video calling using express, socket.io and secure authentication with Auth0.**
 This project was build during the 2.5 days hackathon for Codaisseur Academy and was picked as winner by the the Codaisseur judge. The theme for the hackathon was VIDEO and the main requirement was using a technology we never used before.
 
 ## Table of contents:
