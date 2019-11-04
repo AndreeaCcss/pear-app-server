@@ -43,13 +43,8 @@ io.on("connection", function(socket) {
   console.log("got connection", socket.id);
 
   socket.on("NewClient", function(data) {
-    console.log("rooms before leaving", socket.rooms);
-    console.log("socketId before leaving", socket.id);
     socket.leave(socket.id, () => {
-      console.log("rooms after leaving", socket.rooms);
-      console.log("roomId before joining", data.roomId);
       socket.join(data.roomId, () => {
-        console.log("rooms after joining", socket.rooms);
         socket.in(data.roomId).emit("CreatePeer");
       });
     });
@@ -66,13 +61,11 @@ function Disconnect(socket, roomId) {
 }
 
 function SendOffer(offer) {
-  console.log("sendOffer rooms", this.rooms);
   const rooms = Object.keys(this.rooms);
   this.in(rooms[rooms.length - 1]).emit("BackOffer", offer);
 }
 
 function SendAnswer(data) {
-  console.log("sendAnswer rooms", this.rooms[0], this.rooms[1]);
   const rooms = Object.keys(this.rooms);
   this.in(rooms[rooms.length - 1]).emit("BackAnswer", data);
 }
